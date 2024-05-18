@@ -1,14 +1,17 @@
 FROM python:3.11-alpine
 
-WORKDIR /Blockchain
-COPY requirements.txt .
-
 ENV PYTHONPATH /Blockchain/src:$PYTHONPATH
-RUN apk update && apk add --no-cache \
-        protobuf
 
-RUN pip3 install --no-cache-dir -r requirements.txt
-COPY . .
-RUN protoc --python_out=/Blockchain/src/blocks/protobuf_gen /Blockchain/src/blocks/network_structure.proto
+WORKDIR /Blockchain
 
-CMD ["python3"]
+COPY requirements.txt ./
+COPY blocks/*.proto ./blocks/
+
+RUN apk update && \
+    apk add --no-cache protobuf && \
+    pip3 install --no-cache-dir -r requirements.txt
+
+RUN mkdir -p /Blockchain/blocks/protobuf_gen && \
+    protoc --proto_path=/Blockchain/blocks --python_out=/Blockchain/blocks/protobuf_gen /Blockchain/blocks/network_structure.proto
+
+CMD ["sh"]
