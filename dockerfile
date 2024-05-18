@@ -12,13 +12,13 @@ RUN apk update && \
 RUN mkdir -p /Blockchain/blocks/protobuf_gen && \
     protoc --proto_path=/Blockchain/blocks --python_out=/Blockchain/blocks/protobuf_gen /Blockchain/blocks/network_structure.proto
 
+RUN rm requirements.txt ./blocks/network_structure.proto
 
 FROM python:3.11-alpine
 
 ENV PYTHONPATH /Blockchain/src:$PYTHONPATH
 
 WORKDIR /Blockchain
-COPY --from=builder /Blockchain/requirements.txt .
 COPY --from=builder /Blockchain/blocks/protobuf_gen /Blockchain/blocks/protobuf_gen
 COPY blocks/*.proto ./blocks/
 
