@@ -26,4 +26,5 @@ RUN apk update && \
     apk add --no-cache protobuf && \
     pip3 install --no-cache-dir -r requirements.txt
 
+RUN rm requirements.txt ./blocks/network_structure.proto
 CMD ["sh"]
