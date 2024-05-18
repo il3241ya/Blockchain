@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package NBlock;
+
+message TNetwork {
+    repeated TBlock block = 1;
+}
+
+message TBlock {
+    optional TBlockHeader BlockHeader = 1;
+    optional TBlockData BlockData = 2;
+}   
+
+message TBlockHeader {
+    optional int32 BlockSize = 1;
+    optional bytes PrevBlockHeaderHash = 2;
+    optional bytes MerkleTreeHash = 3;
+    optional int64 Timestamp = 4;
+    optional int32 Nonce = 5;
+}
+
+message TBlockData {
+    repeated bytes Transaction = 1;
+}
+
