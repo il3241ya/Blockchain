@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  blockchain:
+    image: blockchain:develop
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/Blockchain/src
+    working_dir: /Blockchain
+    command: sh
+    stdin_open: true  
+    tty: true  
