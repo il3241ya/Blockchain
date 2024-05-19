@@ -1,1 +1,1 @@
-from hash import HashingFactory
+from src.hashing.hash import HashingFactory

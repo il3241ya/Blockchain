@@ -58,14 +58,14 @@ def _sigma_0_256(x: int) -> int:
     block_size = 32
     return _rotate_right(x, 7, block_size)      \
         ^ _rotate_right(x, 18, block_size)      \
-        ^ (x >> 10)
+        ^ (x >> 3)
 
 
 def _sigma_1_256(x: int) -> int:
     block_size = 32
     return _rotate_right(x, 17, block_size)     \
         ^ _rotate_right(x, 19, block_size)      \
-        ^ (x >> 3)
+        ^ (x >> 10)
 
 
 class HashingFactory:
@@ -74,44 +74,27 @@ class HashingFactory:
         message = self._pad(self._convert(message))
         # initial hash state
         hash_words = [
-            0x6a09e667,
-            0xbb67ae85,
-            0x3c6ef372,
-            0x9b05688c,
-            0xa54ff53a,
-            0x510e527f,
+            0x6a09e667,     # h0
+            0xbb67ae85,     # h1
+            0x3c6ef372,     # h2
+            0xa54ff53a,     # h3
+            0x510e527f,     # h4
+            0x9b05688c,     # h5
             0x1f83d9ab,
             0x5be0cd19
         ]
 
         for block in [message[i:i + 64] for i in range(0, len(message), 64)]:
-            message_schedule = []
+            message_schedule = self._schedule(block)
+
+            a, b, c, d, e, f, g, h = hash_words
+
             for t in range(64):
-                if t <= 15:
-                    message_schedule.append(bytes(
-                        block[t * 4:(t * 4) + 4]))
-                else:
-                    terms = []
-                    terms.append(_sigma_1_256(
-                        int.from_bytes(message_schedule[t - 2])))
-                    terms.append(int.from_bytes(message_schedule[t - 7]))
-                    terms.append(_sigma_0_256(
-                        int.from_bytes(message_schedule[t-15])))
-                    terms.append(int.from_bytes(message_schedule[t-16]))
+                t1 = self._get_t1(h, e, f, g, t, message_schedule)
+                t2 = self._get_t2(a, b, c)
 
-                    schedule = (sum(terms) % (1 << 32)).to_bytes(4)
-                    message_schedule.append(schedule)
-
-        a, b, c, d, e, f, g, h = hash_words
-
-        for t in range(64):
-            t1 = ((h + _sigma_1_256(e) + _ch(e, f, g) + constants[t]
-                   + int.from_bytes(message_schedule[t])) % (1 << 32))
-            t2 = (_sigma_0_256(message_schedule[t])
-                  + _maj(a, b, c)) % (1 << 32)
-
-            h, g, f, e, d, c, b, a = g, f, e, (d + t1) % (1 << 32), \
-                c, b, a, (t1 + t2) % (1 << 32)
+                h, g, f, e, d, c, b, a = g, f, e, (d + t1) % (1 << 32), \
+                    c, b, a, (t1 + t2) % (1 << 32)
 
             i = 0
             for var in [a, b, c, d, e, f, g, h]:
@@ -122,9 +105,6 @@ class HashingFactory:
         for word in hash_words:
             out += bytearray(word.to_bytes(4))
         return out
-
-    def _hash_message(self, message: bytearray) -> bytearray:
-        pass
 
     def _convert(self, message: bytearray | str | bytes) -> bytearray:
         # convert input to bytearray
@@ -140,8 +120,42 @@ class HashingFactory:
         # pad message so it can be split in 32 byte chunks
         length = len(message) * 8   # in bits
         message.append(0x80)
-        while (len(message) + 8) % 32:
+        while (len(message) + 8) % 64:
             message.append(0x00)
         # append length of initial message as 8 byte integer
         message += length.to_bytes(length=8)
         return message
+
+    def _schedule(self, block: bytearray) -> list[int]:
+        message_schedule = []
+        for t in range(64):
+            if t <= 15:
+                message_schedule.append(bytes(
+                    block[t * 4:(t * 4) + 4]))
+            else:
+                terms = []
+                terms.append(_sigma_1_256(
+                    int.from_bytes(message_schedule[t - 2])))
+                terms.append(int.from_bytes(message_schedule[t - 7]))
+                terms.append(_sigma_0_256(
+                    int.from_bytes(message_schedule[t - 15])))
+                terms.append(int.from_bytes(message_schedule[t - 16]))
+
+                schedule = (sum(terms) % (1 << 32)).to_bytes(4)
+                message_schedule.append(schedule)
+        return message_schedule
+
+    def _get_t1(
+        self,
+        h: int,
+        e: int,
+        f: int,
+        g: int,
+        round: int,
+        message_schedule: list[int]
+    ) -> int:
+        return (h + _sum_1_256(e) + _ch(e, f, g) + constants[round]
+                + int.from_bytes(message_schedule[round])) % (1 << 32)
+
+    def _get_t2(self, a: int, b: int, c: int) -> int:
+        return (_sum_0_256(a) + _maj(a, b, c)) % (1 << 32)
