@@ -32,12 +32,12 @@ jobs:
 
       - name: Build Docker image for testing
         run: |
-          docker buildx build --file Dockerfile.test --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --tag ${{ secrets.DOCKER_HUB_USERNAME }}/blockchain:develop --load .
+          docker buildx build --file Dockerfile.test --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --tag il3241ya/blockchain:develop --load .
 
       - name: Run tests in Docker container
         run: |
-          docker run --rm ${{ secrets.DOCKER_HUB_USERNAME }}/blockchain:test
+          docker run --rm il3241ya/blockchain:test
 
       - name: Build Docker image for production
         run: |
-          docker buildx build --file Dockerfile --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --tag ${{ secrets.DOCKER_HUB_USERNAME }}/blockchain:latest --push
+          docker buildx build --file Dockerfile --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --tag il3241ya/blockchain:latest --push
