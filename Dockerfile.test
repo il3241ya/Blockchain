@@ -27,5 +27,4 @@ RUN apk update && \
 
 RUN rm requirements.txt ./blocks/network_structure.proto
 
-# Command to run tests
 CMD ["pytest", "src/hashing/tests"]
