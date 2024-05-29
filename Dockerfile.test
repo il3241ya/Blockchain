@@ -37,4 +37,4 @@ RUN rm requirements.txt ./blocks/network_structure.proto
 # Switch to the tests user
 USER tests
 
-CMD ["python", "src/hashing/tests"]
+CMD ["python", "src/hashing/tests/hash_test.py"]
