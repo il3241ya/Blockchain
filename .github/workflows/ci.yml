@@ -37,7 +37,3 @@ jobs:
       - name: Run tests in Docker container
         run: |
           docker run --rm il3241ya/blockchain:develop
-
-      - name: Build Docker image for production
-        run: |
-          docker buildx build --file Dockerfile --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --tag il3241ya/blockchain:latest --push
