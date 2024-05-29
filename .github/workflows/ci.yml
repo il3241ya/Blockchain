@@ -32,7 +32,7 @@ jobs:
 
     - name: Build Docker image for testing
       run: |
-        docker buildx build --file Dockerfile.test --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --tag ${{ secrets.DOCKER_HUB_USERNAME }}/blockchain:test --load .
+        docker buildx build --file Dockerfile.test --cache-from=type=local,src=/tmp/.buildx-cache --cache-to=type=local,dest=/tmp/.buildx-cache --tag ${{ secrets.DOCKER_HUB_USERNAME }}/blockchain:develop --load .
 
     - name: Run tests in Docker container
       run: |
