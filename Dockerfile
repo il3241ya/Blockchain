@@ -14,7 +14,7 @@ RUN mkdir -p /Blockchain/blocks/protobuf_gen && \
 
 FROM python:3.11-alpine
 
-ENV PYTHONPATH /Blockchain/src:$PYTHONPATH
+ENV PYTHONPATH {$PYTHONPATH}:/Blockchain/src
 
 WORKDIR /Blockchain
 COPY --from=builder /Blockchain/requirements.txt .
