@@ -12,14 +12,13 @@ message TBlock {
 }   
 
 message TBlockHeader {
-    optional int32 BlockSize = 1;
-    optional bytes PrevBlockHeaderHash = 2;
-    optional bytes MerkleTreeHash = 3;
+    optional int32 BlockSize = 1;               // 4 bytes
+    optional bytes PrevBlockHeaderHash = 2;     // 32 bytes (256 bits)
+    optional bytes MerkleTreeHash = 3;          // 32 bytes (256 bits)
     optional int64 Timestamp = 4;
     optional int32 Nonce = 5;
 }
 
 message TBlockData {
-    repeated bytes Transaction = 1;
+    repeated bytes Transaction = 1;             // 226 bytes
 }
-
