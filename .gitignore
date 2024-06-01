@@ -160,4 +160,7 @@ cython_debug/
 #.idea/
 
 
+protobuf_gen/
 TODO.md
+
+mined_block.bin
