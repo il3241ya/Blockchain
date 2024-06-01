@@ -20,7 +20,9 @@ ENV PYTHONPATH {$PYTHONPATH}:/Blockchain/src
 WORKDIR /Blockchain
 COPY --from=builder /Blockchain/requirements.txt .
 COPY --from=builder /Blockchain/blocks/protobuf_gen /Blockchain/blocks/protobuf_gen
+
 COPY --from=builder /Blockchain/main.py .
+
 
 RUN apk update && \
     apk add --no-cache protobuf && \
