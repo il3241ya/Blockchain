@@ -8,7 +8,7 @@ class MerkleNode:
         self.hash_value = hash_value.hex()
 
     def __str__(self):
-        return f"{self.hash_value}"
+        return self.hash_value
 
     
 class MerkleTree:
@@ -28,7 +28,7 @@ class MerkleTree:
         self.tree_structure = []
         self.tree_structure.append(nodes)
 
-        for i in range(tree_depth):
+        for _ in range(tree_depth):
             self.tree_structure.append(
                 [
                     MerkleNode(

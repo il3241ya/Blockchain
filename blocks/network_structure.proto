@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package NBlock;
+package NNetwork;
 
 message TNetwork {
     repeated TBlock block = 1;
@@ -15,7 +15,7 @@ message TBlockHeader {
     optional int32 BlockSize = 1;               // 4 bytes
     optional bytes PrevBlockHeaderHash = 2;     // 32 bytes (256 bits)
     optional bytes MerkleTreeHash = 3;          // 32 bytes (256 bits)
-    optional int64 Timestamp = 4;
+    optional float Timestamp = 4;
     optional int32 Nonce = 5;
 }
 
