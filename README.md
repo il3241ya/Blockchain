@@ -60,7 +60,7 @@ which are rewarded by crypto-currency.
 in Blockchain won't attack it. Some trusted nodes (validators) approve/disapprove
 transactions, and get taxed or rewarded for validity of those.
 
-PoS is better :)
+PoW is better :)
 
 ## Attacks
 
